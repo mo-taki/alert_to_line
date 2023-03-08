@@ -30,7 +30,7 @@ const (
 )
 
 func loadConfig() (*Config, error) {
-	f, err := ioutil.ReadFile("./config.json")
+	f, err := ioutil.ReadFile("/usr/local/alert_to_line/config.json")
 	if err != nil {
 		log.Fatal(err)
 	}
