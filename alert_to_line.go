@@ -54,9 +54,9 @@ func main() {
 	var alertMsg string
 
 	if alertType == "HOST" {
-		alertMsg = fmt.Sprintf("***** Nagios *****\n\nNotification Type: %v\nHost: %v\nState: %v\nAddress: %v\nInfo: %v\n\nDate/Time: %v\n", args[1], args[2], args[3], args[4], args[5], args[6])
+		alertMsg = fmt.Sprintf("Notification Type: %v\nHost: %v\nState: %v\nAddress: %v\nInfo: %v\n\nDate/Time: %v\n", args[1], args[2], args[3], args[4], args[5], args[6])
 	} else if alertType == "SERVICE" {
-		alertMsg = fmt.Sprintf("***** Nagios *****\n\nNotification Type: %v\n\nService: %v\nHost: %v\nAddress: %v\nState: %v\n\nDate/Time: %v\n\nAdditional Info:\n%v\n", args[1], args[2], args[3], args[4], args[5], args[6], args[7])
+		alertMsg = fmt.Sprintf("Notification Type: %v\n\nService: %v\nHost: %v\nAddress: %v\nState: %v\n\nDate/Time: %v\n\nAdditional Info:\n%v\n", args[1], args[2], args[3], args[4], args[5], args[6], args[7])
 	} else {
 		log.Fatal("first arg is not HOST or SERVICE")
 	}
