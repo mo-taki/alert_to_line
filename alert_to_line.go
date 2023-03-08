@@ -3,11 +3,11 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
-	"os"
 )
 
 type Message struct {
@@ -32,8 +32,7 @@ const (
 func loadConfig() (*Config, error) {
 	f, err := ioutil.ReadFile("./config.json")
 	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
+		log.Fatal(err)
 	}
 
 	var cfg Config
@@ -48,12 +47,26 @@ func main() {
 		log.Fatal(err)
 	}
 
+	flag.Parse()
+	args := flag.Args()
+
+	alertType := args[0]
+	var alertMsg string
+
+	if alertType == "HOST" {
+		alertMsg = fmt.Sprintf("***** Nagios *****\n\nNotification Type: %v\nHost: %v\nState: %v\nAddress: %v\nInfo: %v\n\nDate/Time: %v\n", args[1], args[2], args[3], args[4], args[5], args[6])
+	} else if alertType == "SERVICE" {
+		alertMsg = fmt.Sprintf("***** Nagios *****\n\nNotification Type: %v\n\nService: %v\nHost: %v\nAddress: %v\nState: %v\n\nDate/Time: %v\n\nAdditional Info:\n%v\n", args[1], args[2], args[3], args[4], args[5], args[6], args[7])
+	} else {
+		log.Fatal("first arg is not HOST or SERVICE")
+	}
+
 	requestBody := RequestBody{
 		To: env.UserID,
 		Messages: []Message{
 			{
 				Type: "text",
-				Text: "uooooo",
+				Text: alertMsg,
 			},
 		},
 	}
