@@ -90,7 +90,7 @@ func main() {
 	args := flag.Args()
 
 	if args[0] == "test" {
-		sendMessage("test message")
+		sendMessage("Test Message")
 		return
 	}
 
