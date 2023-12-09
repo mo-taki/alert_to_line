@@ -109,7 +109,7 @@ func main() {
 		case "UNKNOWN":
 			stateIcon = "❓"
 		default:
-			stateIcon = "🔶"
+			stateIcon = "📛"
 		}
 	} else if alertType == "HOST" {
 		switch args[3] {
@@ -120,7 +120,7 @@ func main() {
 		case "UNREACHABLE":
 			stateIcon = "❓"
 		default:
-			stateIcon = "🔶"
+			stateIcon = "📛"
 		}
 	} else {
 		log.Fatal("first arg is not HOST or SERVICE")
