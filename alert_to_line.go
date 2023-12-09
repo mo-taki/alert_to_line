@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
+	"os"
 )
 
 type Message struct {
@@ -30,7 +31,7 @@ const (
 )
 
 func loadConfig() (*Config, error) {
-	f, err := ioutil.ReadFile("/usr/local/alert_to_line/config.json")
+	f, err := os.ReadFile("/usr/local/alert_to_line/config.json")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -41,18 +42,18 @@ func loadConfig() (*Config, error) {
 	return &cfg, err
 }
 
-func sendTest() {
+func sendMessage(message string) {
 	env, err := loadConfig()
 	if err != nil {
 		log.Fatal(err)
 	}
-	
+
 	requestBody := RequestBody{
 		To: env.UserID,
 		Messages: []Message{
 			{
 				Type: "text",
-				Text: "test message",
+				Text: message,
 			},
 		},
 	}
@@ -75,31 +76,26 @@ func sendTest() {
 	}
 	defer resp.Body.Close()
 
-	byteArray, err := ioutil.ReadAll(resp.Body)
+	byteArray, err := io.ReadAll(resp.Body)
 	if err != nil {
 		panic("Error")
 	}
 
 	fmt.Printf("%#v\n", string(byteArray))
+
 }
 
 func main() {
-	env, err := loadConfig()
-	if err != nil {
-		log.Fatal(err)
-	}
-
 	flag.Parse()
 	args := flag.Args()
 
 	if args[0] == "test" {
-		sendTest()
+		sendMessage("test message")
 		return
 	}
 
 	alertType := args[0]
 	var alertMsg string
-
 	var stateIcon string
 
 	switch args[5] {
@@ -124,38 +120,5 @@ func main() {
 		log.Fatal("first arg is not HOST or SERVICE")
 	}
 
-	requestBody := RequestBody{
-		To: env.UserID,
-		Messages: []Message{
-			{
-				Type: "text",
-				Text: alertMsg,
-			},
-		},
-	}
-
-	jsonString, err := json.Marshal(requestBody)
-	if err != nil {
-		panic("Error")
-	}
-	req, err := http.NewRequest("POST", ENDPOINT, bytes.NewBuffer(jsonString))
-	if err != nil {
-		panic("Error")
-	}
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+env.ChannelAccessToken)
-
-	client := new(http.Client)
-	resp, err := client.Do(req)
-	if err != nil {
-		panic("Error")
-	}
-	defer resp.Body.Close()
-
-	byteArray, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		panic("Error")
-	}
-
-	fmt.Printf("%#v\n", string(byteArray))
+	sendMessage(alertMsg)
 }
