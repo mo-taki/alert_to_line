@@ -126,12 +126,12 @@ func main() {
 		log.Fatal("first arg is not HOST or SERVICE")
 	}
 
-	if alertType == "HOST" {
+	switch alertType {
+	case "HOST":
 		alertMsg = fmt.Sprintf("%v %v %v\nHost: %v\n\n %v",args[0], args[3], stateIcon, args[2], args[5] )
-	} else if alertType == "SERVICE" {
+	case "SERVICE":
 		alertMsg = fmt.Sprintf("%v %v %v %v\nHost: %v\n\n%v",args[0], args[2], args[5], stateIcon, args[3], args[7])
-		// alertMsg = fmt.Sprintf("Notification Type: %v\n\nService: %v\nHost: %v\nAddress: %v\nState: %v\n\nDate/Time: %v\n\nAdditional Info:\n%v\n", args[1], args[2], args[3], args[4], args[5], args[6], args[7])
-	} else {
+	default:
 		log.Fatal("first arg is not HOST or SERVICE")
 	}
 
